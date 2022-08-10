@@ -5,7 +5,10 @@ parameters:
     # You should not need to change this value.
     env(DATABASE_URL): ''
     env(DATABASE_VERSION): ~
-
+    # SSL Info
+    private_key: /etc/my.cnf.d/certs/client-key.pem
+    public_cert: /etc/my.cnf.d/certs/client-cert.pem
+    ca_cert: /etc/my.cnf.d/certs/ca-cert.pem
 doctrine:
     dbal:
         default_connection: default
@@ -22,7 +25,12 @@ doctrine:
                 default_table_options:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
-
+                options:
+                    # !php/const PDO::MYSQL_ATTR_SSL_CA : '%ca_cert%'
+                    # !php/const PDO::MYSQL_ATTR_SSL_KEY : '%private_key%'
+                    # !php/const PDO::MYSQL_ATTR_SSL_CERT : '%public_cert%'
+                    !php/const PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT : 'false'
+                    !php/const PDO::MYSQL_ATTR_SSL_CA : '/'
         types:
             datetime: App\Doctrine\UTCDateTimeType
     orm:
