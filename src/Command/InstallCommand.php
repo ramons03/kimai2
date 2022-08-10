@@ -42,6 +42,7 @@ final class InstallCommand extends Command
 
     public function __construct(Connection $connection)
     {
+        //echo "InstallCommand __construct \n";
         parent::__construct();
         $this->connection = $connection;
     }
@@ -133,32 +134,40 @@ final class InstallCommand extends Command
 
     protected function importMigrations(SymfonyStyle $io, OutputInterface $output)
     {
+        $io->text('importMigrations');
         $command = $this->getApplication()->find('doctrine:migrations:migrate');
         $cmdInput = new ArrayInput(['--allow-no-migration' => true]);
         $cmdInput->setInteractive(false);
-        $command->run($cmdInput, $output);
-
+        $io->text('importMigrations run');
+        $result = $command->run($cmdInput, $output);
+        if (0 !== $result) {
+            $io->text('Failed importMigrations');
+            throw new \Exception('Failed cimportMigrations');
+        }
+        $io->text('importMigrations done');
         $io->writeln('');
     }
 
     protected function createDatabase(SymfonyStyle $io, InputInterface $input, OutputInterface $output)
     {
+        $io->text('createDatabase');
         if ($this->connection->isConnected()) {
             $io->note(sprintf('Database is existing and connection could be established'));
 
             return;
         }
-
+        $io->text('askConfirmation');
         if (!$this->askConfirmation($input, $output, sprintf('Create the database "%s" (yes) or skip (no)?', $this->connection->getDatabase()), true)) {
             throw new \Exception('Skipped database creation, aborting installation');
         }
-
+        $io->text('--if-not-exists');
         $options = ['--if-not-exists' => true];
-
+        $io->text('doctrine:database:create');
         $command = $this->getApplication()->find('doctrine:database:create');
         $result = $command->run(new ArrayInput($options), $output);
 
         if (0 !== $result) {
+            $io->text('Failed creating database');
             throw new \Exception('Failed creating database. Check your credentials in DATABASE_URL');
         }
     }

@@ -8,7 +8,7 @@ parameters:
     # SSL Info
     private_key: /etc/my.cnf.d/certs/client-key.pem
     public_cert: /etc/my.cnf.d/certs/client-cert.pem
-    ca_cert: /etc/my.cnf.d/certs/ca-cert.pem
+    ca_cert: E:\ssl\DigiCertGlobalRootCA.crt.pem
 doctrine:
     dbal:
         default_connection: default
@@ -29,8 +29,8 @@ doctrine:
                     # !php/const PDO::MYSQL_ATTR_SSL_CA : '%ca_cert%'
                     # !php/const PDO::MYSQL_ATTR_SSL_KEY : '%private_key%'
                     # !php/const PDO::MYSQL_ATTR_SSL_CERT : '%public_cert%'
-                    !php/const PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT : 'false'
-                    !php/const PDO::MYSQL_ATTR_SSL_CA : '/'
+                    !php/const PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT : 'true'
+                    !php/const PDO::MYSQL_ATTR_SSL_CA : '%ca_cert%'
         types:
             datetime: App\Doctrine\UTCDateTimeType
     orm:
