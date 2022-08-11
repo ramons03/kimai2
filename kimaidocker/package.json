@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "prepare": "husky install",
+    "test": "make test",
+    "release-patch": "standard-version --release-as patch",
+    "release-minor": "standard-version --release-as minor",
+    "release-major": "standard-version --release-as major"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
+    "husky": "^6.0.0",
+    "standard-version": "^9.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo git hooks are awesome!",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "version": "2.0.3"
+}
